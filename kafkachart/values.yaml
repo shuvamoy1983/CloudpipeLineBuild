@@ -1,0 +1,36 @@
+metadata:
+        name: mykafka
+replicaCount: 3
+resources:
+        requests:
+          memory: 8Gi
+          cpu: "6"
+        limits:
+          memory: 8Gi
+          cpu: "6"
+storage:
+      type: jbod
+      volumes:
+      - id: 0
+        type: persistent-claim
+        size: 30Gi
+config:
+  insyncReplicas: 2
+
+  #affinity:
+  #    nodeAffinity:
+  #       requiredDuringSchedulingIgnoredDuringExecution:
+  #         nodeSelectorTerms:
+  #           - matchExpressions:
+  #             - key: all-pools-example
+  #               operator: In
+  #               values:
+  #               - "true"
+
+topicname: "topic-emp"
+zookeeper:
+        replicaCount: 1
+        storage:
+          type: persistent-claim
+          size: 15Gi
+

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: spark-master
+ labels:
+   app: spark-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       app: spark-master
+  template:
+    metadata:
+      labels:
+        app: spark-master
+    spec:
+      serviceAccountName: spark-drv
+      containers:
+      - name : spark-master
+        image: shuvamoy008/spark8s
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 7077
+          protocol: TCP
+        command:
+         - "/bin/bash"
+         - "-c"
+         - "--"
+        args :
+         - './bin/bash ; sleep infinity'

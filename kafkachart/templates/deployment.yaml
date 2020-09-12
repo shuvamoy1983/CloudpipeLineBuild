@@ -1,0 +1,32 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: {{ .Values.metadata.name }}
+spec:
+  kafka:
+  #affinity:
+  #{{ toYaml .Values.affinity | indent 8 }}
+    replicas: {{ .Values.replicaCount }}
+    resources:
+{{ toYaml .Values.resources | indent 8 }}
+    listeners:
+      plain: {}
+      tls: {}
+      external:
+        type: loadbalancer
+        tls: false
+    storage:
+{{ toYaml .Values.storage | indent 8 }}
+        deleteClaim: false
+    config:
+      min.insync.replicas: {{ .Values.config.insyncReplicas }}
+
+  zookeeper:
+    replicas: {{ .Values.zookeeper.replicaCount }}
+    storage:
+      type: {{ .Values.zookeeper.storage.type }}
+      size: {{ .Values.zookeeper.storage.size }}
+      deleteClaim: false
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

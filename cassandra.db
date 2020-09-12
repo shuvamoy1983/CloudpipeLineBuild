@@ -1,0 +1,3 @@
+CREATE KEYSPACE mydb WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+create table mydb.emp (id int primary key,"Name" text, "Salary" int);
+create table mydb.dept ("DEPT_ID" int primary key,"Dept_Name" text, "EMP_ID" int);
