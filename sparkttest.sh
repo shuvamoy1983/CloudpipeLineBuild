@@ -6,9 +6,9 @@ export K8S_TOKEN=/var/run/secrets/kubernetes.io/serviceaccount/token
 
 # Docker runtime image
 export DOCKER_IMAGE=shuvamoy008/spark8s
-export SPARK_DRIVER_NAME=spark-postgres
+export SPARK_DRIVER_NAME=spark-pipe
 
-export kafkaPost=`kubectl get all -n kc | grep -i kafka-cp-kafka-0-nodeport | awk '{print $4}'`
+
 export KafkaBootstrapIP=`kubectl get all -n kafka | grep -i mykafka-kafka-external-bootstrap | awk '{print $4}'`
 export cassandraHost=`kubectl get svc -n cass-operator-system | grep -i cassandra-loadbalancer | awk '{print $4}'`
 export cassandraUserName=$(kubectl -n cass-operator-system get secret cluster1-superuser -o json | jq -r '.data.username' | base64 --decode)
@@ -23,8 +23,9 @@ echo "Running the spark command $K8ip:$port"
 
 MySqlUserName="root"
 MySqlPassword="password" 
+Kaf="34.86.86.224"
 
-kubectl exec -it deployment.apps/spark-master -n $SPARK_NAMESPACE -- /bin/bash -c "/opt/spark/bin/spark-submit --name sparkpostgresdatacapture \
+kubectl exec -it deployment.apps/spark-master -n $SPARK_NAMESPACE -- /bin/bash -c "/opt/spark/bin/spark-submit --name sparkkafka-222 \
    --master $K8ip:$port \
   --deploy-mode cluster  \
   --class org.apache.spark.examples.postgressTopicRead  \
@@ -36,6 +37,6 @@ kubectl exec -it deployment.apps/spark-master -n $SPARK_NAMESPACE -- /bin/bash -
   --conf spark.executor.instances=2  \
   --conf spark.kubernetes.container.image=$DOCKER_IMAGE  \
   --conf spark.kubernetes.container.image.pullPolicy=Always \
-  local:///opt/spark/examples/jars/GCP-1.0-SNAPSHOT-jar-with-dependencies.jar $KafkaBootstrapIP $cassandraHost $cassandraUserName $cassandraPassword $mySQLIP $MySqlUserName $MySqlPassword $kafkaPost"
+  local:///opt/spark/examples/jars/GCP-1.0-SNAPSHOT-jar-with-dependencies.jar $KafkaBootstrapIP $cassandraHost $cassandraUserName $cassandraPassword $mySQLIP $MySqlUserName $MySqlPassword $Kaf"
 
 
