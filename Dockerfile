@@ -62,7 +62,7 @@ ADD  config-1.3.4.jar mysql-connector-java-5.1.26.jar spark-hadoop-cloud_2.11-2.
 
 #ADD spark-cassandra-connector_2.11-2.4.2.jar /opt/spark/jars/
 
-#ADD GCP-1.0-SNAPSHOT-jar-with-dependencies.jar /opt/spark/examples/jars/
+ADD GCP-1.0-SNAPSHOT-jar-with-dependencies.jar /opt/spark/examples/jars/
 ADD core-site.xml /opt/hadoop/etc/hadoop/
 ADD gcs-connector-latest-hadoop2.jar /opt/spark/jars/
 
