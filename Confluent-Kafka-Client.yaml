@@ -2,7 +2,7 @@
     kind: Pod
     metadata:
       name: kafka-client
-      namespace: kc
+      namespace: kc1
     spec:
       containers:
       - name: kafka-client

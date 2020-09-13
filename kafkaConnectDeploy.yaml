@@ -27,7 +27,7 @@
                 port: 8083
             env:
               - name: BOOTSTRAP_SERVERS
-                value: 34.86.86.224:19092
+                value: 34.86.139.146:19092
               - name: GROUP_ID
                 value: "1"
               - name: OFFSET_STORAGE_TOPIC

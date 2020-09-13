@@ -8,7 +8,7 @@ export K8S_TOKEN=/var/run/secrets/kubernetes.io/serviceaccount/token
 export DOCKER_IMAGE=shuvamoy008/spark8s
 export SPARK_DRIVER_NAME=spark-postgres
 
-export kafkaPost=`kubectl get all -n kc | grep -i kafka-cp-kafka-0-nodeport | awk '{print $4}'`
+export kafkaPost=`kubectl get all -n kc1 | grep -i kafka-cp-kafka-0-nodeport | awk '{print $4}'`
 export KafkaBootstrapIP=`kubectl get all -n kafka | grep -i mykafka-kafka-external-bootstrap | awk '{print $4}'`
 export cassandraHost=`kubectl get svc -n cass-operator-system | grep -i cassandra-loadbalancer | awk '{print $4}'`
 export cassandraUserName=$(kubectl -n cass-operator-system get secret cluster1-superuser -o json | jq -r '.data.username' | base64 --decode)
