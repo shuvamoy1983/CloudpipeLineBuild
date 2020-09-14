@@ -18,14 +18,14 @@ object ConnectSession {
   private var myJDBC: Option[String] = None
 
   def init(config: Configurations,MySqlHost: String,MySqlUserName: String
-           ,MySqlPassword: String,cassandraHost: String,cassandraUserName: String,cassandraPassword: String) {
+           ,MySqlPassword: String,cassandraHost: String,cassandraUserName: String,cassandraPassword: String,elasticsearchIP: String) {
     getLog.info(s"Get Spark session for ${config.appName} ")
-    spark = Some(createSparkSession(config.appName,cassandraHost,cassandraUserName,cassandraPassword))
+    spark = Some(createSparkSession(config.appName,cassandraHost,cassandraUserName,cassandraPassword,elasticsearchIP))
     mysql=CreateMySqlJDBC(MySqlHost,MySqlUserName,MySqlPassword)
 
   }
 
-  private def createSparkSession(appName: String,cassandraHost:String,cassandraUserName:String,cassandraPassword:String): SparkSession = {
+  private def createSparkSession(appName: String,cassandraHost:String,cassandraUserName:String,cassandraPassword:String,elasticsearchIP:String): SparkSession = {
     val conf = new SparkConf()
       .setAppName("Connecting to Spark")
       .set("spark.scheduler.pool","FAIR")
@@ -39,7 +39,8 @@ object ConnectSession {
       .set("spark.cassandra.auth.username",cassandraUserName)
       .set("spark.cassandra.auth.password",cassandraPassword)
 
-    val session = SparkSession.builder().master("local").appName(appName).config(conf).getOrCreate()
+
+    val session = SparkSession.builder().master("local").appName(appName).config(conf).config("spark.es.nodes.discovery", "false").config("spark.es.cluster.name","elasticsearch").config("spark.es.nodes",elasticsearchIP).config("spark.es.port","9200").config("es.nodes.wan.only","true").getOrCreate()
     session.sparkContext.setLocalProperty("spark.scheduler.pool", "fair_pool")
     session
   }

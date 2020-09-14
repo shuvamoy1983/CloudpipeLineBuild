@@ -20,14 +20,6 @@ object MainJob {
     val startTime=convertToIST
     val ListOfFiles=ListOfInputFile.ListOfFilesToRead
 
-   /* val kafkaIP="34.86.183.222"
-    val cassandraHost="34.86.89.154"
-    val cassandraUserName="cluster1-superuser"
-    val cassandraPassword="nae1sTSNQRw_28Jte8E2nvLabYHAYePGnFq7Lc_iyH5yRbWAStN2Dg"
-    val MySqlHost="34.86.56.34"
-    val MySqlUserName="root"
-    val MySqlPassword="password" */
-
 
     val kafkaIP=args(0)
     val cassandraHost=args(1)
@@ -36,13 +28,14 @@ object MainJob {
     val MySqlHost=args(4)
     val MySqlUserName=args(5)
     val MySqlPassword=args(6)
+    val ElasticSearchIP=Option(args(7)).getOrElse("")
 
     // Execution Started for each input File
     ListOfFiles.foreach({ resourcePath =>
       val tmpLoc = readFileFromResource.readFromInputResource(resourcePath)
       val config: Configurations = parseYamlFile(s"$tmpLoc")
 
-      ConnectSession.init(config,MySqlHost,MySqlUserName,MySqlPassword,cassandraHost,cassandraUserName,cassandraPassword)
+      ConnectSession.init(config,MySqlHost,MySqlUserName,MySqlPassword,cassandraHost,cassandraUserName,cassandraPassword,ElasticSearchIP)
 
       val mytopicList =new ListBuffer[String]()
       val mySchemaList =new ListBuffer[String]()

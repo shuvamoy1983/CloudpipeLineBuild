@@ -4,7 +4,6 @@ import org.apache.spark.sql.types.{IntegerType, StringType, StructType}
 
 object JsonStructures {
 
-
    def Schema(table: String) : org.apache.spark.sql.types.StructType  ={
      var strc : org.apache.spark.sql.types.StructType=null
      if (table.equals("emp")) {
@@ -17,6 +16,8 @@ object JsonStructures {
      }
      strc
    }
+
+
 
   def getEmpSchema:org.apache.spark.sql.types.StructType = {
     val structureSchema = new StructType()

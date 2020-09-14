@@ -1,12 +1,12 @@
 package org.apache.spark.examples
 
 import java.nio.file.{Files, Paths}
-
+import org.elasticsearch.spark.sql._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.{Column, DataFrame, Dataset, ForeachWriter, Row, SparkSession}
+import org.apache.spark.sql.{Column, DataFrame, Dataset, ForeachWriter, Row, SaveMode, SparkSession}
 import org.apache.spark.sql.avro._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger
@@ -29,14 +29,16 @@ object app {
       .set("spark.cassandra.auth.username","cluster1-superuser")
       .set("spark.cassandra.auth.password","")
 
-    val spark = SparkSession.builder().appName("cassandratest").config(conf).master("local").getOrCreate()
+    val spark = SparkSession.builder().appName("cassandratest").config(conf).master("local").config("spark.es.nodes","").config("spark.es.port","9200").config("es.nodes.wan.only","true").getOrCreate()
 
     import spark.implicits._
-  /*  spark.sparkContext.setLogLevel("ERROR")
+   spark.sparkContext.setLogLevel("ERROR")
 
-    val Data = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/home/tech/emp.csv")
-    Data.show()
+   // val Data = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/home/tech/emp.csv")
+    //Data.show()
+    //Data.saveToEs("mypoc/_doc")
 
+   /*
     Data.select(to_avro(struct("*")) as "value")
       .write
       .format("kafka")
@@ -54,7 +56,7 @@ object app {
       .option("kafka.bootstrap.servers", ":9094")
       .option("kafka.request.required.acks", "1")
       .option("topic", "topic1-dept")
-      .save()
+      .save() */
 
     /*Data.write
       .format("org.apache.spark.sql.cassandra")
@@ -63,9 +65,9 @@ object app {
       .mode("APPEND")
       .save() */
 
-   */
 
-    val df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", "9092").option("subscribe", "postgres.mydb.emp").option("multiLine", true).option("startingOffsets", "latest").load()
+
+    val df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", ":9094").option("subscribe", "test").option("multiLine", true).option("startingOffsets", "latest").load()
 
 
    df.select(col("topic").cast("String"), col("value").cast("String")).writeStream.foreachBatch {  (df: Dataset[Row], _: Long) => df.show() }.start().awaitTermination()

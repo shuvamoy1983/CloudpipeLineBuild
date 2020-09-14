@@ -1,11 +1,12 @@
 package org.apache.spark.examples
 
 import java.nio.file.{Files, Paths}
+import java.util.concurrent.Executors
 import java.util.regex.Pattern
 
 import org.apache.spark.SparkConf
 import org.apache.spark.examples.FileParsing.fileParse.parseYamlFile
-import org.apache.spark.examples.OutputWrite.PostgresToKafka
+import org.apache.spark.examples.OutputWrite.{NodeJsToSpark, PostgresToKafka}
 import org.apache.spark.examples.SourceConfiguration.Configurations
 import org.apache.spark.examples.Utils.readFileFromResource
 import org.apache.spark.examples.allInputFiles.ListOfInputFile
@@ -23,21 +24,12 @@ import scala.collection.mutable.ListBuffer
 
 object postgressTopicRead {
 
-
   def main(args: Array[String]): Unit = {
 
     val ListOfFiles = ListOfInputFile.ListOfFilesToRead
       ListOfFiles.foreach({ resourcePath =>
       val tmpLoc = readFileFromResource.readFromInputResource(resourcePath)
       val config: Configurations = parseYamlFile(s"$tmpLoc")
-
-     /* val kafkaIP = ""
-      val cassandraHost = ""
-      val cassandraUserName = "cluster1-superuser"
-      val cassandraPassword = ""
-      val MySqlHost = ""
-      val MySqlUserName = "root"
-      val MySqlPassword = "password" */
 
         val kafkaDestIP=args(0)
         val cassandraHost=args(1)
@@ -47,18 +39,21 @@ object postgressTopicRead {
         val MySqlUserName=args(5)
         val MySqlPassword=args(6)
         val kafkaSourceeIP=args(7)
+        val ElasticSearchIP=Option(args(8)).getOrElse("")
 
-      ConnectSession.init(config, MySqlHost, MySqlUserName, MySqlPassword, cassandraHost, cassandraUserName, cassandraPassword)
+
+      ConnectSession.init(config, MySqlHost, MySqlUserName, MySqlPassword, cassandraHost, cassandraUserName, cassandraPassword,ElasticSearchIP)
       val spark: SparkSession = getSparkSession
 
       val postgresTopic = new ListBuffer[String]()
       val mytopicList = new ListBuffer[String]()
+      val nodejsTopicList= new ListBuffer[String]()
 
       var lenOfSchema = config.KafkaTopic.length - 1
       var lenOfSchemaforPostgres = config.postgresTopic.length - 1
+      var lenOfNodeJs = config.NodeJsTopic.length - 1
 
-        println(lenOfSchema)
-        println(lenOfSchemaforPostgres)
+
 
       config.KafkaTopic.foreach { table =>
 
@@ -70,13 +65,20 @@ object postgressTopicRead {
           val KafkaTopic = config.KafkaTopic(lenOfSchema)
           mytopicList += KafkaTopic
         }
+
+
+
         lenOfSchemaforPostgres =lenOfSchemaforPostgres -1
         lenOfSchema=lenOfSchema-1
 
+
       }
-      println("mylist",mytopicList,postgresTopic)
+
 
       PostgresToKafka.writePostgresToKafka(spark,mytopicList, postgresTopic, kafkaDestIP, config,kafkaSourceeIP)
+
+
+
     })
 
   }

@@ -3,15 +3,13 @@ SourceType : Kafka
 KafkaTopic: ["topic1-emp","topic1-dept"]
 KafkaSchemaDataSetName: ["emp.avsc","dept.avsc"]
 postgresTopic: ["postgres.mydb.dept","postgres.mydb.emp"]
+NodeJsTopic: ["nodejs.mydb.emp"]
 outputOptions:
   NoSqlDb: Cassandra
   DB: Mysql
   FileLoc: gs://shuva-buc
-  BigqueryStageTable:
-  SaveMode:
-  targetTable: emp,dept
-  mysqlDatabaseName: MyDB
-  savemode: overwrite
+  Bigquery:
+  Kibana: mypoc
 FileConversion: CsvToText
 explain: true
 loglevels: Info

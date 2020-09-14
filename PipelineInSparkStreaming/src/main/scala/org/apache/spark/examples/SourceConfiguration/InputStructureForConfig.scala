@@ -22,5 +22,7 @@ trait InputStructure {
 
     def postgresTopic: List[String]
 
+    def NodeJsTopic: List[String]
+
 
   }

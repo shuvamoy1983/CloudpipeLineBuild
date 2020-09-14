@@ -12,6 +12,7 @@ class Configurations(
                      @JsonProperty("KafkaTopic") _KafkaTopic: List[String],
                      @JsonProperty("KafkaSchemaDataSetName") _KafkaSchemaDataSetName: List[String],
                      @JsonProperty("postgresTopic") _postgresTopic: List[String],
+                     @JsonProperty("NodeJsTopic") _NodeJsTopic: List[String],
                      @JsonProperty("explain") _explain: Boolean) extends InputStructure {
 
   require(Option(_SourceType).isDefined,"Need to provide the details for environment")
@@ -26,5 +27,6 @@ class Configurations(
   val KafkaTopic: List[String]=Option(_KafkaTopic).getOrElse(List())
   val postgresTopic: List[String]=Option(_postgresTopic).getOrElse(List())
   val KafkaSchemaDataSetName: List[String]=Option(_KafkaSchemaDataSetName).getOrElse(List())
+  val NodeJsTopic: List[String]=Option(_NodeJsTopic).getOrElse(List())
 
 }

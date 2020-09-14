@@ -17,7 +17,7 @@ spec:
       serviceAccountName: spark-drv
       containers:
       - name : spark-master
-        image: shuvamoy008/spark8s
+        image: shuvamoy008/spark8spipeline
         imagePullPolicy: "IfNotPresent"
         ports:
         - containerPort: 7077

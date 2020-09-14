@@ -8,18 +8,20 @@ import org.apache.spark.sql.functions.{col, from_json, struct}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructType}
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.{ExecutionContext, Future}
 
 object PostgresToKafka {
 
   def manOf[T: Manifest](t: T): Manifest[T] = manifest[T]
 
-  def writePostgresToKafka(spark: SparkSession, OrgtopicName: ListBuffer[String],
+  def writePostgresToKafka(spark: SparkSession,
+                           OrgtopicName: ListBuffer[String],
                            postgresTopic: ListBuffer[String],
                            KafkaIP: String,
                            config: Configurations,
-                           kafkaSourceeIP: String) = {
+                           kafkaSourceeIP: String)= {
 
-    val topics = postgresTopic.mkString(",")
+  val topics = postgresTopic.mkString(",")
     val len = OrgtopicName.length
     var a=0
     val df = spark.readStream
@@ -39,7 +41,7 @@ object PostgresToKafka {
         df.show()
         //df.persist()
         val tpc = df.select("topic").distinct().collect().map(_.getString(0)).mkString(" ")
-        println("mre", tpc)
+
 
         //println(tpc.split("\\.")(1))
         if (!tpc.isEmpty) {
