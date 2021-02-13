@@ -65,7 +65,7 @@ pipeline {
 	    
 	   stage('Build Docker Image') {
             when {
-                expression { params.ACTION == 'true'}
+                expression { params.ACTION == 'false'}
             }
             steps {
                 script {
@@ -76,7 +76,7 @@ pipeline {
         }
           stage('Push Docker Image') {
             when {
-                 expression { params.ACTION == 'true' }
+                 expression { params.ACTION == 'false' }
             }
             steps {
                 script {
