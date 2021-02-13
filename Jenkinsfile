@@ -1,4 +1,4 @@
-def provider = 'gcp'
+def provider = 'aws'
 // Conditionally define a variable 'impact'
 if (provider == 'aws') {
   script = "aws_bash.sh"
@@ -26,7 +26,7 @@ pipeline {
 	   
 	   stage ("Running Terraform for Cloud Provisioning") {
 	      when {
-                expression { params.ACTION == 'true' }
+                expression { params.ACTION == 'false' }
                }
               steps {
 	         sh  " sh ${script} ${provider}"
@@ -35,7 +35,7 @@ pipeline {
 
            stage('Deploy strimzi and kafka operator') {
              when {
-                expression {  params.ACTION == 'true' }
+                expression {  params.ACTION == 'false' }
                  }
                
 		  steps {
@@ -114,7 +114,7 @@ pipeline {
 	    }
 	      stage('deploy helm for spark') {
                 when {
-                 expression { params.ACTION == 'true' }
+                 expression { params.ACTION == 'false' }
                    }
                    steps {
 		     script {
@@ -139,7 +139,7 @@ pipeline {
 	    
 	     stage('Run spark Application') {
                 when {
-                 expression { params.ACTION == 'true' }
+                 expression { params.ACTION == 'false' }
                    }
                    steps {
 		     script {
