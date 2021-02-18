@@ -26,7 +26,7 @@ pipeline {
 	   
 	   stage ("Running Terraform for Cloud Provisioning") {
 	      when {
-                expression { params.ACTION == 'false' }
+                expression { params.ACTION == 'true' }
                }
               steps {
 	         sh  " sh ${script} ${provider}"
@@ -92,7 +92,7 @@ pipeline {
 	    
 	   stage('Push mysql Images') {
             when {
-                 expression { params.ACTION == 'true' }
+                 expression { params.ACTION == 'false' }
             }
             steps {
 		    script {
